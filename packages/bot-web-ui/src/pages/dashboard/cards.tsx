@@ -21,7 +21,7 @@ type TCardProps = {
 
 type TCardArray = {
     type: string;
-    icon: React.ReactNode;
+    icon: string;
     content: string;
     callback: () => void;
 };
@@ -47,7 +47,7 @@ const Cards = observer(({ is_mobile, has_dashboard_strategies }: TCardProps) => 
     const actions: TCardArray[] = [
         {
             type: 'my-computer',
-            icon: <MyLocalIcon />, // Replace with actual icon import
+            icon: MyLocalIcon, // Replace with actual icon import
             content: is_mobile ? localize('Local') : localize('My computer'),
             callback: () => {
                 openFileLoader();
@@ -61,7 +61,7 @@ const Cards = observer(({ is_mobile, has_dashboard_strategies }: TCardProps) => 
         },
         {
             type: 'google-drive',
-            icon: <MyGoogleDriveIcon />, // Replace with actual icon import
+            icon: MyGoogleDriveIcon, // Replace with actual icon import
             content: localize('Google Drive'),
             callback: () => {
                 openGoogleDriveDialog();
@@ -75,7 +75,7 @@ const Cards = observer(({ is_mobile, has_dashboard_strategies }: TCardProps) => 
         },
         {
             type: 'bot-builder',
-            icon: <MyBotBuilderIcon />, // Replace with actual icon import
+            icon: MyBotBuilderIcon, // Replace with actual icon import
             content: localize('Bot Builder'),
             callback: () => {
                 setActiveTab(DBOT_TABS.BOT_BUILDER);
@@ -87,7 +87,7 @@ const Cards = observer(({ is_mobile, has_dashboard_strategies }: TCardProps) => 
         },
         {
             type: 'quick-strategy',
-            icon: <MyQuickStrategyIcon />, // Replace with actual icon import
+            icon: MyQuickStrategyIcon, // Replace with actual icon import
             content: localize('Quick strategy'),
             callback: () => {
                 setActiveTab(DBOT_TABS.BOT_BUILDER);
@@ -132,10 +132,11 @@ const Cards = observer(({ is_mobile, has_dashboard_strategies }: TCardProps) => 
                                 }}
                                 tabIndex={0}
                             >
+                               // In your render:
                                 <div className={classNames('tab__dashboard__table__images', {
                                     'tab__dashboard__table__images--minimized': has_dashboard_strategies,
                                 })}>
-                                    {icon}
+                                    <img src={icon} alt={content} style={{ width: '3rem', height: '3rem' }} />
                                 </div>
                                 <Text color='prominent' size={is_mobile ? 'xxs' : 'xs'}>
                                     {content}
