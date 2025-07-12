@@ -90,6 +90,14 @@ module.exports = function (env) {
                         },
                     ],
                 },
+
+                {
+                    test: /\.(png|jpe?g|gif)$/i,
+                    type: 'asset/resource',
+                    generator: {
+                        filename: 'bot/images/[name][hash][ext][query]',
+                    },
+                },
                 {
                     test: /\.(js|jsx|ts|tsx)$/,
                     exclude: /node_modules/,
