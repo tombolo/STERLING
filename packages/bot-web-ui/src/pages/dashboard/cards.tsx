@@ -8,10 +8,11 @@ import { useDBotStore } from 'Stores/useDBotStore';
 import { rudderStackSendOpenEvent } from '../../analytics/rudderstack-common-events';
 import { rudderStackSendDashboardClickEvent } from '../../analytics/rudderstack-dashboard';
 import DashboardBotList from './bot-list/dashboard-bot-list';
-import MyLocalIcon from '.images/local.png';
-import MyGoogleDriveIcon from '.images/drive.png';
-import MyBotBuilderIcon from '.images/builder.png';
-import MyQuickStrategyIcon from '.images/strategy.jpg';
+// import a supported SVG icon component instead of a PNG
+import MyLocalIcon from './images/local.png';
+import MyGoogleDriveIcon from './images/drive.png';
+import MyBotBuilderIcon from './images/builder.png';
+import MyQuickStrategyIcon from './images/strategy.jpg';
 
 type TCardProps = {
     has_dashboard_strategies: boolean;
