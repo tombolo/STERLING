@@ -8,12 +8,12 @@ import { useDBotStore } from 'Stores/useDBotStore';
 import { rudderStackSendOpenEvent } from '../../analytics/rudderstack-common-events';
 import { rudderStackSendDashboardClickEvent } from '../../analytics/rudderstack-dashboard';
 import DashboardBotList from './bot-list/dashboard-bot-list';
-// import a supported SVG icon component instead of a PNG
-import LocalIcon from './images/local.svg';
-import DriveIcon from './images/drive.svg';
-import BuilderIcon from './images/builder.svg';
-import StrategyIcon from './images/strategy.svg';
 
+// SVG imports (make sure these are React components)
+import { ReactComponent as LocalIcon } from './images/local.svg';
+import { ReactComponent as DriveIcon } from './images/drive.svg';
+import { ReactComponent as BuilderIcon } from './images/builder.svg';
+import { ReactComponent as StrategyIcon } from './images/strategy.svg';
 
 type TCardProps = {
     has_dashboard_strategies: boolean;
@@ -22,7 +22,7 @@ type TCardProps = {
 
 type TCardArray = {
     type: string;
-    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+    icon: React.ReactNode;
     content: string;
     callback: () => void;
 };
@@ -48,7 +48,7 @@ const Cards = observer(({ is_mobile, has_dashboard_strategies }: TCardProps) => 
     const actions: TCardArray[] = [
         {
             type: 'my-computer',
-            icon: LocalIcon, // Replace with actual icon import
+            icon: <LocalIcon className="tab__dashboard__table__icon" />,
             content: is_mobile ? localize('Local') : localize('My computer'),
             callback: () => {
                 openFileLoader();
@@ -62,7 +62,7 @@ const Cards = observer(({ is_mobile, has_dashboard_strategies }: TCardProps) => 
         },
         {
             type: 'google-drive',
-            icon: DriveIcon, // Replace with actual icon import
+            icon: <DriveIcon className="tab__dashboard__table__icon" />,
             content: localize('Google Drive'),
             callback: () => {
                 openGoogleDriveDialog();
@@ -76,7 +76,7 @@ const Cards = observer(({ is_mobile, has_dashboard_strategies }: TCardProps) => 
         },
         {
             type: 'bot-builder',
-            icon: BuilderIcon, // Replace with actual icon import
+            icon: <BuilderIcon className="tab__dashboard__table__icon" />,
             content: localize('Bot Builder'),
             callback: () => {
                 setActiveTab(DBOT_TABS.BOT_BUILDER);
@@ -88,7 +88,7 @@ const Cards = observer(({ is_mobile, has_dashboard_strategies }: TCardProps) => 
         },
         {
             type: 'quick-strategy',
-            icon: StrategyIcon, // Replace with actual icon import
+            icon: <StrategyIcon className="tab__dashboard__table__icon" />,
             content: localize('Quick strategy'),
             callback: () => {
                 setActiveTab(DBOT_TABS.BOT_BUILDER);
@@ -115,41 +115,34 @@ const Cards = observer(({ is_mobile, has_dashboard_strategies }: TCardProps) => 
                     })}
                     id='tab__dashboard__table__tiles'
                 >
-                    {actions.map(icons => {
-                        const { icon, content, callback } = icons;
-                        return (
-                            <div
-                                key={content}
-                                className={classNames('tab__dashboard__table__block', {
-                                    'tab__dashboard__table__block--minimized': has_dashboard_strategies && is_mobile,
-                                })}
-                                onClick={() => {
-                                    callback();
-                                }}
-                                onKeyDown={(e: React.KeyboardEvent) => {
-                                    if (e.key === 'Enter') {
-                                        callback();
-                                    }
-                                }}
-                                tabIndex={0}
-                            >
-                                <div className={classNames('tab__dashboard__table__images', {
-                                    'tab__dashboard__table__images--minimized': has_dashboard_strategies,
-                                })}>
-                                    <Icon custom_icon={icon} /> {/* Use the Icon component to render the SVG */}
-                                </div>
-                                <Text color='prominent' size={is_mobile ? 'xxs' : 'xs'}>
-                                    {content}
-                                </Text>
+                    {actions.map(({ icon, content, callback }) => (
+                        <div
+                            key={content}
+                            className={classNames('tab__dashboard__table__block', {
+                                'tab__dashboard__table__block--minimized': has_dashboard_strategies && is_mobile,
+                            })}
+                            onClick={callback}
+                            onKeyDown={(e: React.KeyboardEvent) => {
+                                if (e.key === 'Enter') callback();
+                            }}
+                            tabIndex={0}
+                            role="button"
+                        >
+                            <div className={classNames('tab__dashboard__table__images', {
+                                'tab__dashboard__table__images--minimized': has_dashboard_strategies,
+                            })}>
+                                {icon}
                             </div>
-                        );
-                    })}
+                            <Text color='prominent' size={is_mobile ? 'xxs' : 'xs'}>
+                                {content}
+                            </Text>
+                        </div>
+                    ))}
                 </div>
                 <DashboardBotList />
             </div>
         ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [is_dialog_open, has_dashboard_strategies]
+        [is_dialog_open, has_dashboard_strategies, is_mobile]
     );
 });
 
