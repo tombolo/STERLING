@@ -64,7 +64,6 @@ const DashboardComponent = observer(({ handleTabChange }: TMobileIconGuide) => {
                     </div>
                 </div>
             </div>
-            <InfoPanel />
             {active_tab === 0 && <OnboardTourHandler is_mobile={!is_desktop} />}
         </React.Fragment>
     );
