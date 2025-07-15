@@ -1,5 +1,4 @@
 import React from 'react';
-import { getSavedWorkspaces } from '@deriv/bot-skeleton';
 import { Text } from '@deriv/components';
 import { observer, useStore } from '@deriv/stores';
 import { Localize, localize } from '@deriv/translations';
@@ -39,14 +38,7 @@ const DashboardBotList = observer(() => {
 
     React.useEffect(() => {
         setStrategySaveType('');
-        const getStrategies = async () => {
-            const recent_strategies = await getSavedWorkspaces();
-            setDashboardStrategies(recent_strategies);
-            if (!get_instacee.current) {
-                get_instacee.current = true;
-            }
-        };
-        getStrategies();
+        
         //this dependency is used when we use the save modal popup
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [strategy_save_type]);
@@ -62,29 +54,19 @@ const DashboardBotList = observer(() => {
     return (
         <div className='bot-list__container'>
             <div className='bot-list__wrapper'>
-                <div className='bot-list__title'>
-                    <Text size={is_desktop ? 's' : 'xs'} weight='bold'>
-                        <Localize i18n_default_text='Your bots:' />
-                    </Text>
-                </div>
+                
                 <div className='bot-list__header'>
                     {HEADERS.map(({ label, className }) => {
                         return (
                             <div className={className} key={label}>
-                                <Text size={is_desktop ? 'xs' : 'xxs'} weight='bold'>
-                                    {label}
-                                </Text>
+                                
                             </div>
                         );
                     })}
                 </div>
-                <div className='bot-list__table'>
-                    {dashboard_strategies.map(workspace => (
-                        <RecentWorkspace key={workspace.id} workspace={workspace} />
-                    ))}
-                </div>
+                
             </div>
-            <DeleteDialog />
+            
         </div>
     );
 });
