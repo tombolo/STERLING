@@ -21,11 +21,15 @@ export const parseOhlc = ohlc => ({
 
 export const parseCandles = candles => candles.map(t => parseOhlc(t));
 
-export const updateTicks = (ticks, newTick) =>
-    getLast(ticks).epoch >= newTick.epoch ? ticks : [...ticks.slice(1), newTick];
+export const updateTicks = (ticks, newTick) => {
+    const lastTick = getLast(ticks);
+    if (!lastTick) return [newTick]; // or ticks, depending on your logic
+    return lastTick.epoch >= newTick.epoch ? ticks : [...ticks.slice(1), newTick];
+};
 
 export const updateCandles = (candles, ohlc) => {
     const lastCandle = getLast(candles);
+    if (!lastCandle) return [ohlc]; // or candles, depending on your logic
     if (
         (lastCandle.open === ohlc.open &&
             lastCandle.high === ohlc.high &&
@@ -39,5 +43,4 @@ export const updateCandles = (candles, ohlc) => {
     const prevCandles = lastCandle.epoch === ohlc.epoch ? candles.slice(0, -1) : candles.slice(1);
     return [...prevCandles, ohlc];
 };
-
 export const getType = isCandle => (isCandle ? 'candles' : 'ticks');
