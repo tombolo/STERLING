@@ -1,5 +1,4 @@
 // auto-generated file. DO NOT MODIFY.
-
 import './appstore/ic-appstore-account.svg';
 import './appstore/ic-appstore-add-rounded.svg';
 import './appstore/ic-appstore-add-square.svg';

@@ -9,12 +9,6 @@ import { rudderStackSendOpenEvent } from '../../analytics/rudderstack-common-eve
 import { rudderStackSendDashboardClickEvent } from '../../analytics/rudderstack-dashboard';
 import DashboardBotList from './bot-list/dashboard-bot-list';
 
-// SVG imports (make sure these are React components)
-import { ReactComponent as LocalIcon } from './images/local.svg';
-import { ReactComponent as DriveIcon } from './images/drive.svg';
-import { ReactComponent as BuilderIcon } from './images/builder.svg';
-import { ReactComponent as StrategyIcon } from './images/strategy.svg';
-
 type TCardProps = {
     has_dashboard_strategies: boolean;
     is_mobile: boolean;
@@ -22,7 +16,7 @@ type TCardProps = {
 
 type TCardArray = {
     type: string;
-    icon: React.ReactNode;
+    icon: string;
     content: string;
     callback: () => void;
 };
@@ -48,7 +42,7 @@ const Cards = observer(({ is_mobile, has_dashboard_strategies }: TCardProps) => 
     const actions: TCardArray[] = [
         {
             type: 'my-computer',
-            icon: <LocalIcon className="tab__dashboard__table__icon" />,
+            icon: is_mobile ? 'IcLocal' : 'IcMyComputer',
             content: is_mobile ? localize('Local') : localize('My computer'),
             callback: () => {
                 openFileLoader();
@@ -62,7 +56,7 @@ const Cards = observer(({ is_mobile, has_dashboard_strategies }: TCardProps) => 
         },
         {
             type: 'google-drive',
-            icon: <DriveIcon className="tab__dashboard__table__icon" />,
+            icon: 'IcGoogleDriveDbot',
             content: localize('Google Drive'),
             callback: () => {
                 openGoogleDriveDialog();
@@ -76,7 +70,7 @@ const Cards = observer(({ is_mobile, has_dashboard_strategies }: TCardProps) => 
         },
         {
             type: 'bot-builder',
-            icon: <BuilderIcon className="tab__dashboard__table__icon" />,
+            icon: 'IcBotBuilder',
             content: localize('Bot Builder'),
             callback: () => {
                 setActiveTab(DBOT_TABS.BOT_BUILDER);
@@ -88,7 +82,7 @@ const Cards = observer(({ is_mobile, has_dashboard_strategies }: TCardProps) => 
         },
         {
             type: 'quick-strategy',
-            icon: <StrategyIcon className="tab__dashboard__table__icon" />,
+            icon: 'IcQuickStrategy',
             content: localize('Quick strategy'),
             callback: () => {
                 setActiveTab(DBOT_TABS.BOT_BUILDER);
@@ -115,34 +109,45 @@ const Cards = observer(({ is_mobile, has_dashboard_strategies }: TCardProps) => 
                     })}
                     id='tab__dashboard__table__tiles'
                 >
-                    {actions.map(({ icon, content, callback }) => (
-                        <div
-                            key={content}
-                            className={classNames('tab__dashboard__table__block', {
-                                'tab__dashboard__table__block--minimized': has_dashboard_strategies && is_mobile,
-                            })}
-                            onClick={callback}
-                            onKeyDown={(e: React.KeyboardEvent) => {
-                                if (e.key === 'Enter') callback();
-                            }}
-                            tabIndex={0}
-                            role="button"
-                        >
-                            <div className={classNames('tab__dashboard__table__images', {
-                                'tab__dashboard__table__images--minimized': has_dashboard_strategies,
-                            })}>
-                                {icon}
+                    {actions.map(icons => {
+                        const { icon, content, callback } = icons;
+                        return (
+                            <div
+                                key={content}
+                                className={classNames('tab__dashboard__table__block', {
+                                    'tab__dashboard__table__block--minimized': has_dashboard_strategies && is_mobile,
+                                })}
+                                onClick={() => {
+                                    callback();
+                                }}
+                                onKeyDown={(e: React.KeyboardEvent) => {
+                                    if (e.key === 'Enter') {
+                                        callback();
+                                    }
+                                }}
+                                tabIndex={0}
+                            >
+                                <Icon
+                                    className={classNames('tab__dashboard__table__images', {
+                                        'tab__dashboard__table__images--minimized': has_dashboard_strategies,
+                                    })}
+                                    width='8rem'
+                                    height='8rem'
+                                    icon={icon}
+                                    id={icon}
+                                />
+                                <Text color='prominent' size={is_mobile ? 'xxs' : 'xs'}>
+                                    {content}
+                                </Text>
                             </div>
-                            <Text color='prominent' size={is_mobile ? 'xxs' : 'xs'}>
-                                {content}
-                            </Text>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
                 <DashboardBotList />
             </div>
         ),
-        [is_dialog_open, has_dashboard_strategies, is_mobile]
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [is_dialog_open, has_dashboard_strategies]
     );
 });
 
