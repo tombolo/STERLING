@@ -9,10 +9,11 @@ import { rudderStackSendOpenEvent } from '../../analytics/rudderstack-common-eve
 import { rudderStackSendDashboardClickEvent } from '../../analytics/rudderstack-dashboard';
 import DashboardBotList from './bot-list/dashboard-bot-list';
 // import a supported SVG icon component instead of a PNG
-import MyLocalIcon from './images/local.png';
-import MyGoogleDriveIcon from './images/drive.png';
-import MyBotBuilderIcon from './images/builder.png';
-import MyQuickStrategyIcon from './images/strategy.jpg';
+import LocalIcon from './images/local.svg';
+import DriveIcon from './images/drive.svg';
+import BuilderIcon from './images/builder.svg';
+import StrategyIcon from './images/strategy.svg';
+
 
 type TCardProps = {
     has_dashboard_strategies: boolean;
@@ -21,7 +22,7 @@ type TCardProps = {
 
 type TCardArray = {
     type: string;
-    icon: string;
+    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
     content: string;
     callback: () => void;
 };
@@ -47,7 +48,7 @@ const Cards = observer(({ is_mobile, has_dashboard_strategies }: TCardProps) => 
     const actions: TCardArray[] = [
         {
             type: 'my-computer',
-            icon: MyLocalIcon, // Replace with actual icon import
+            icon: LocalIcon, // Replace with actual icon import
             content: is_mobile ? localize('Local') : localize('My computer'),
             callback: () => {
                 openFileLoader();
@@ -61,7 +62,7 @@ const Cards = observer(({ is_mobile, has_dashboard_strategies }: TCardProps) => 
         },
         {
             type: 'google-drive',
-            icon: MyGoogleDriveIcon, // Replace with actual icon import
+            icon: DriveIcon, // Replace with actual icon import
             content: localize('Google Drive'),
             callback: () => {
                 openGoogleDriveDialog();
@@ -75,7 +76,7 @@ const Cards = observer(({ is_mobile, has_dashboard_strategies }: TCardProps) => 
         },
         {
             type: 'bot-builder',
-            icon: MyBotBuilderIcon, // Replace with actual icon import
+            icon: BuilderIcon, // Replace with actual icon import
             content: localize('Bot Builder'),
             callback: () => {
                 setActiveTab(DBOT_TABS.BOT_BUILDER);
@@ -87,7 +88,7 @@ const Cards = observer(({ is_mobile, has_dashboard_strategies }: TCardProps) => 
         },
         {
             type: 'quick-strategy',
-            icon: MyQuickStrategyIcon, // Replace with actual icon import
+            icon: StrategyIcon, // Replace with actual icon import
             content: localize('Quick strategy'),
             callback: () => {
                 setActiveTab(DBOT_TABS.BOT_BUILDER);
@@ -132,11 +133,10 @@ const Cards = observer(({ is_mobile, has_dashboard_strategies }: TCardProps) => 
                                 }}
                                 tabIndex={0}
                             >
-                               // In your render:
                                 <div className={classNames('tab__dashboard__table__images', {
                                     'tab__dashboard__table__images--minimized': has_dashboard_strategies,
                                 })}>
-                                    <img src={icon} alt={content} style={{ width: '3rem', height: '3rem' }} />
+                                    <Icon custom_icon={icon} /> {/* Use the Icon component to render the SVG */}
                                 </div>
                                 <Text color='prominent' size={is_mobile ? 'xxs' : 'xs'}>
                                     {content}
