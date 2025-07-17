@@ -320,6 +320,9 @@ class DBot {
                     sleep(5);
                     currentTickTime = Bot.getLastTick(true);
                 }
+                if (!currentTickTime || typeof currentTickTime.epoch === 'undefined') {
+                    throw new Error('Tick data is missing or malformed: ' + JSON.stringify(currentTickTime));
+                }
                 currentTickTime = currentTickTime.epoch;
                 if (currentTickTime === BinaryBotPrivateLastTickTime) {
                     return;

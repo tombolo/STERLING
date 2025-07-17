@@ -25,6 +25,7 @@ export default Engine =>
                         this.checkProposalReady();
                     }
                     const lastTick = ticks.slice(-1)[0];
+                    if (!lastTick) return; // Prevent error if ticks is empty
                     const { epoch } = lastTick;
                     this.store.dispatch({ type: constants.NEW_TICK, payload: epoch });
                 };
